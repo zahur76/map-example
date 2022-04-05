@@ -24,11 +24,15 @@ if os.path.exists("env.py"):
 # Gdal Settings
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-os.environ['PATH'] = os.path.join(BASE_DIR, r'.venv\Lib\site-packages\osgeo') + ';' + os.environ['PATH']
+OSGEO4W = r"C:\OSGeo4W"
+os.environ['OSGEO4W_ROOT'] = OSGEO4W
+os.environ['GDAL_DATA'] = os.path.join(BASE_DIR, r'.venv\Lib\site-packages\osgeo\data\gdal') 
+os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
+os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
 
-os.environ['PROJ_LIB'] = os.path.join(BASE_DIR, r'.venv3\Lib\site-packages\osgeo\data\proj') + ';' + os.environ['PATH']
 
-GDAL_LIBRARY_PATH = os.path.join(BASE_DIR, r'.venv\Lib\site-packages\osgeo\gdal204.dll') 
+if "DEVELOPMENT" in os.environ:
+    GDAL_LIBRARY_PATH = os.path.join(BASE_DIR, r'.venv\Lib\site-packages\osgeo\gdal204.dll') 
 
 
 # Quick-start development settings - unsuitable for production
@@ -90,10 +94,21 @@ WSGI_APPLICATION = 'mymap.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        'HOST': '127.0.0.1', 
+        "NAME": "mymap",
+        "PASSWORD": os.environ.get("PASSWORD"),
+        "PORT": 5432,
+        "USER": "postgres",
     }
 }
 
