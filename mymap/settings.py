@@ -12,13 +12,23 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 
+
+
 from pathlib import Path
 
 if os.path.exists("env.py"):
     import env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+# Gdal Settings
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+os.environ['PATH'] = os.path.join(BASE_DIR, r'.venv\Lib\site-packages\osgeo') + ';' + os.environ['PATH']
+
+os.environ['PROJ_LIB'] = os.path.join(BASE_DIR, r'.venv3\Lib\site-packages\osgeo\data\proj') + ';' + os.environ['PATH']
+
+GDAL_LIBRARY_PATH = os.path.join(BASE_DIR, r'.venv\Lib\site-packages\osgeo\gdal204.dll') 
 
 
 # Quick-start development settings - unsuitable for production
@@ -42,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "django.contrib.gis",
     'mylocations',
 ]
 
@@ -85,7 +96,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
