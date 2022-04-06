@@ -110,7 +110,7 @@ if "DATABASE_URL" in os.environ:
             "ENGINE": "django.contrib.gis.db.backends.postgis",
             'HOST': os.environ['HOST'], 
             "NAME": os.environ["NAME"],
-            "PASSWORD": os.environ["PASSWORD"],
+            "PASSWORD": os.environ["PASSWORDPG"],
             "PORT": 5432,
             "USER": os.environ["USER"],
         }
