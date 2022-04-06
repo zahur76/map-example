@@ -19,19 +19,20 @@ from pathlib import Path
 if os.path.exists("env.py"):
     import env
 
+import dj_database_url
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
 # Gdal Settings
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-OSGEO4W = r"C:\OSGeo4W"
-os.environ['OSGEO4W_ROOT'] = OSGEO4W
-os.environ['GDAL_DATA'] = os.path.join(BASE_DIR, r'.venv\Lib\site-packages\osgeo\data\gdal') 
-os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
-os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
-
 
 if "DEVELOPMENT" in os.environ:
+    OSGEO4W = r"C:\OSGeo4W"
+    os.environ['OSGEO4W_ROOT'] = OSGEO4W
+    os.environ['GDAL_DATA'] = os.path.join(BASE_DIR, r'.venv\Lib\site-packages\osgeo\data\gdal') 
+    os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
+    os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
     GDAL_LIBRARY_PATH = os.path.join(BASE_DIR, r'.venv\Lib\site-packages\osgeo\gdal204.dll') 
 
 
@@ -63,6 +64,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -102,17 +104,21 @@ WSGI_APPLICATION = 'mymap.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.contrib.gis.db.backends.postgis",
-        'HOST': '127.0.0.1', 
-        "NAME": "mymap",
-        "PASSWORD": os.environ.get("PASSWORD"),
-        "PORT": 5432,
-        "USER": "postgres",
+if "DATABASE_URL" in os.environ:
+    DATABASES = {"default": dj_database_url.parse(os.environ.get("DATABASE_URL"))}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.contrib.gis.db.backends.postgis",
+            'HOST': '127.0.0.1', 
+            "NAME": "mymap",
+            "PASSWORD": os.environ.get("PASSWORD"),
+            "PORT": 5432,
+            "USER": "postgres",
+        }
     }
-}
+    
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -150,6 +156,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# used for testing collectstatic in development
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
