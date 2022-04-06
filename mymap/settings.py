@@ -45,7 +45,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['geodjango-example.herokuapp.com', "127.0.0.1", 'http://localhost:8000/']
+ALLOWED_HOSTS = ['geodjango-example.herokuapp.com/', "127.0.0.1", 'http://localhost:8000/']
 
 
 # Application definition
@@ -105,6 +105,7 @@ WSGI_APPLICATION = 'mymap.wsgi.application'
 #     }
 # }
 if "DATABASE_URL" in os.environ:
+    ['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
     DATABASES = {"default": dj_database_url.parse(os.environ.get("DATABASE_URL"))}
 else:
     DATABASES = {
