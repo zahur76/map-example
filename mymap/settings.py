@@ -105,8 +105,16 @@ WSGI_APPLICATION = 'mymap.wsgi.application'
 #     }
 # }
 if "DATABASE_URL" in os.environ:
-    ['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
-    DATABASES = {"default": dj_database_url.parse(os.environ.get("DATABASE_URL"))}
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.contrib.gis.db.backends.postgis",
+            'HOST': os.environ['HOST'], 
+            "NAME": os.environ["NAME"],
+            "PASSWORD": os.environ["PASSWORD"],
+            "PORT": 5432,
+            "USER": os.environ["USER"],
+        }
+    }
 else:
     DATABASES = {
         "default": {
