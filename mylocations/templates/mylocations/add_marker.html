@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Markers Map</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" type="text/css" href="{% static 'mylocations/css/mylocations.css' %}" />
+        <link rel="stylesheet" type="text/css" href="https:///unpkg.com/leaflet/dist/leaflet.css" />
+        <script src="https:///unpkg.com/leaflet/dist/leaflet.js"></script>
+    </head>
+    <body>
+        <form>
+            {% csrf_token %}
+            <div style="margin-top: 50px; margin-left: 300px;"><input id="name" type="text" name="name" placeholder="name" required/></div>
+            <button id="submit" type="submit" style="margin-left: 300px; margin-top: 50px;">Submit</button>
+        </form>
+        
+        
+        <div id="map" style="width: 50%; height: 50%; margin: 0 auto; margin-top: 100px;"></div>
+       
+        <script src="{% static 'mylocations/js/add_marker.js' %}"></script>
+    </body>
+</html>
